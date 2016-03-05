@@ -1,0 +1,31 @@
+<head>
+<style>
+iframe {
+	position:relative;
+	float:right;
+	height:100%;
+	width: 100%;
+	top:%;
+	background-color:;
+}
+</style>
+</head>
+
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>User:</strong>
+  <%= @space.user.username %>
+</p>
+
+<p>
+  <strong>Spacename:</strong>
+  <%= @space.spacename %>
+</p>
+
+<iframe id='iframe2' src="http://editor.method.ac" frameborder="0" style="overflow: hidden; height: 100%; width: 100%; position: absolute;" height="100%" width="100% >
+</iframe>
+"http://svg-edit.googlecode.com/svn/branches/stable/editor/svg-editor.html" height="768" width="100%"
+
+<%= link_to 'Edit', edit_space_path(@space) %> |
+<%= link_to 'Back', spaces_path %>

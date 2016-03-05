@@ -38,4 +38,18 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # enable mailer so Devise can send email
+  config.action_mailer.default_url_options = { :host => 'http://104.236.151.16/whiteboard' }
+  # ActionMailer Config
+  # Setup for production - deliveries, no errors raised
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+
+# uncomment the last two lines
+
+  #Disable delivery errors, bad email addresses will be ignored
+  #config.action_mailer.raised_delivery_errors = false
+  #config.action_mailer.default :charset => "utf-8"
+
 end
