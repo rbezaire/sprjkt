@@ -4,11 +4,15 @@
 <style>
 .brdr {
 	border: 5px solid black;
+	width:800px;
+	height:800px;
 }
 </style>
 </head>
 <script>
 </script>
+
+<center>
 
 <p id="notice"><%= notice %></p>
 
@@ -21,6 +25,7 @@
   <strong>Spacename:</strong>
   <%= @space.spacename %>
 </p>
+
 
 <div class="brdr"> 
 <div id="canvasDiv"></div>
@@ -80,12 +85,19 @@ function addClick(x, y, dragging)
   clickDrag.push(dragging);
 }
 
+function clearMe(){
+  context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+  clickX = [];
+  clickY = [];
+  clickDrag = [];
+} 
+
 function redraw(){
   context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
   
   context.strokeStyle = "#df4b26";
   context.lineJoin = "round";
-  context.lineWidth = 5;
+  context.lineWidth = 2;
 			
   for(var i=0; i < clickX.length; i++) {		
     context.beginPath();
@@ -101,8 +113,11 @@ function redraw(){
 }
 </script>
 
-<button type="button" onclick="myfunction()">Click Me!</button>
+<button onclick="clearMe()">Clear Me!</button>
 
 <%= link_to 'Edit', edit_space_path(@space) %> |
 <%= link_to 'Back', spaces_path %>
+
+</center>
+
 </html>
