@@ -18,7 +18,7 @@ class LayersControllerTest < ActionController::TestCase
 
   test "should create layer" do
     assert_difference('Layer.count') do
-      post :create, layer: { drawdata: @layer.drawdata, user_id: @layer.user_id, z_val: @layer.z_val }
+      post :create, layer: { arydrag: @layer.arydrag, aryx: @layer.aryx, aryy: @layer.aryy, zval: @layer.zval }
     end
 
     assert_redirected_to layer_path(assigns(:layer))
@@ -35,7 +35,7 @@ class LayersControllerTest < ActionController::TestCase
   end
 
   test "should update layer" do
-    patch :update, id: @layer, layer: { drawdata: @layer.drawdata, user_id: @layer.user_id, z_val: @layer.z_val }
+    patch :update, id: @layer, layer: { arydrag: @layer.arydrag, aryx: @layer.aryx, aryy: @layer.aryy, zval: @layer.zval }
     assert_redirected_to layer_path(assigns(:layer))
   end
 

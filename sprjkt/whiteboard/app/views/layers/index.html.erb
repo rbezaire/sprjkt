@@ -5,9 +5,10 @@
 <table>
   <thead>
     <tr>
-      <th>User</th>
-      <th>Drawdata</th>
-      <th>Z val</th>
+      <th>Aryx</th>
+      <th>Aryy</th>
+      <th>Arydrag</th>
+      <th>Zval</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -15,9 +16,10 @@
   <tbody>
     <% @layers.each do |layer| %>
       <tr>
-        <td><%= layer.user %></td>
-        <td><%= layer.drawdata %></td>
-        <td><%= layer.z_val %></td>
+        <td><%= layer.aryx %></td>
+        <td><%= layer.aryy %></td>
+        <td><%= layer.arydrag %></td>
+        <td><%= layer.zval %></td>
         <td><%= link_to 'Show', layer %></td>
         <td><%= link_to 'Edit', edit_layer_path(layer) %></td>
         <td><%= link_to 'Destroy', layer, method: :delete, data: { confirm: 'Are you sure?' } %></td>

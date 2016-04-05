@@ -10,6 +10,8 @@ class SpacesController < ApplicationController
   # GET /spaces/1
   # GET /spaces/1.json
   def show
+	@layer = @space.layers.all
+	@layer_new = Layer.new
   end
 
   # GET /spaces/new

@@ -1,11 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  user_id: 
-  drawdata: 
-  z_val: 
+  aryx: MyString
+  aryy: MyString
+  arydrag: MyString
+  zval: 
 
 two:
-  user_id: 
-  drawdata: 
-  z_val: 
+  aryx: MyString
+  aryy: MyString
+  arydrag: MyString
+  zval: 

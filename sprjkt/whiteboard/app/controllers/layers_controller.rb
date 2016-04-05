@@ -14,7 +14,8 @@ class LayersController < ApplicationController
 
   # GET /layers/new
   def new
-    @layer = Layer.new
+    @layer = space.layer.new
+	render json: @layer
   end
 
   # GET /layers/1/edit
@@ -24,7 +25,8 @@ class LayersController < ApplicationController
   # POST /layers
   # POST /layers.json
   def create
-    @layer = Layer.new(layer_params)
+	space = Space.find(params[:space_id])
+    @layer = space.layers.new(layer_params)
 
     respond_to do |format|
       if @layer.save
@@ -69,6 +71,6 @@ class LayersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def layer_params
-      params.require(:layer).permit(:user_id, :drawdata, :z_val)
+      params.require(:layer).permit(:aryx, :aryy, :arydrag, :zval)
     end
 end

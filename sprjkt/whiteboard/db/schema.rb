@@ -11,12 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160223232014) do
+ActiveRecord::Schema.define(version: 20160328230547) do
 
   create_table "layers", force: :cascade do |t|
+    t.string   "aryx"
+    t.string   "aryy"
+    t.string   "arydrag"
+    t.binary   "zval"
     t.integer  "user_id"
-    t.binary   "drawdata"
-    t.integer  "z_val"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -26,8 +28,11 @@ ActiveRecord::Schema.define(version: 20160223232014) do
   create_table "spaces", force: :cascade do |t|
     t.integer  "user_id"
     t.string   "spacename"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.string   "clickX",     default: "--- []\n"
+    t.string   "clickY",     default: "--- []\n"
+    t.string   "clickDrag",  default: "--- []\n"
   end
 
   add_index "spaces", ["user_id"], name: "index_spaces_on_user_id"
