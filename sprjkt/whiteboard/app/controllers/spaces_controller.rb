@@ -1,5 +1,6 @@
 class SpacesController < ApplicationController
   before_action :set_space, only: [:show, :edit, :update, :destroy]
+  skip_before_action :verify_authenticity_token
 
   # GET /spaces
   # GET /spaces.json
@@ -10,7 +11,7 @@ class SpacesController < ApplicationController
   # GET /spaces/1
   # GET /spaces/1.json
   def show
-	@layer = @space.layers.all
+    @layer = @space.layers.all
 	@layer_new = Layer.new
   end
 
@@ -19,8 +20,33 @@ class SpacesController < ApplicationController
     @space = Space.new
   end
 
-  # GET /spaces/1/edit
+  # PATCH/PUT /spaces/1
+  # PATCH/PUT /spaces/1.json
+  def clear
+	@space = Space.find(params[:space_id])
+	@space.clickX = []
+	@space.clickY = []
+	@space.clickDrag = []
+	@space.save
+
+    respond_to do |format|
+      if @space.update(space_params)
+        format.html { redirect_to @space, notice: 'Space was successfully updated.' }
+        format.json { render :show, status: :ok, location: @space }
+      else
+        format.html { render :edit }
+        format.json { render json: @space.errors, status: :unprocessable_entity }
+      end
+    end
+
+
+
+  end
+
+  # GET /spaces/1
+  # GET /spaces/1.json
   def edit
+	
   end
 
   # POST /spaces
@@ -43,6 +69,17 @@ class SpacesController < ApplicationController
   # PATCH/PUT /spaces/1
   # PATCH/PUT /spaces/1.json
   def update
+
+	@varx = params[:x]
+	@vary = params[:y]
+	@vard = params[:dragging]
+	@space = Space.find(params[:id])
+
+	@space.clickX.push(@varx)
+	@space.clickY.push(@vary)
+	@space.clickDrag.push(@vard)
+	@space.save
+
     respond_to do |format|
       if @space.update(space_params)
         format.html { redirect_to @space, notice: 'Space was successfully updated.' }
@@ -72,6 +109,6 @@ class SpacesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def space_params
-      params.require(:space).permit(:user_id, :spacename)
+      params.require(:space).permit(:user_id, :spacename, :clickX, :clickY, :clickDrag)
     end
 end

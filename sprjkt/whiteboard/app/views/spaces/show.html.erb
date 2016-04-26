@@ -22,19 +22,15 @@
   <%= @space.user.username %>
 </p>
 
-<p>
-  <strong>Spacename:</strong>
+  <%= @post %>
+
+<p> <strong>Spacename:</strong>
   <%= @space.spacename %>
 </p>
 
 <p>
   <strong>Space Id:</strong>
   <%= @space.id %>
-</p>
-
-<p>
-  <strong>ClickX:</strong>
-  <%= @space.clickX %>
 </p>
 
 <div class="brdr"> 
@@ -63,14 +59,13 @@ $('#canvas').mousedown(function(e){
   var mouseY = e.pageY - this.offsetTop;
 		
   paint = true;
-  addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+  addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, false);
   redraw();
 });
 
 $('#canvas').mousemove(function(e){
   if(paint){
     addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
-	space.save;
     redraw();
   }
 });
@@ -87,26 +82,37 @@ var clickX = new Array();
 var clickY = new Array();
 var clickDrag = new Array();
 var paint;
-var space = <% @Space %>
+var url = '/spaces/' + <%= @space.id %>;
 
 function addClick(x, y, dragging)
 {
   clickX.push(x);
   clickY.push(y);
   clickDrag.push(dragging);
- 
-  space.clickX.push(x);
-  space.clickY.push(y);
-  space.clickDrag.push(dragging);
-  space.save;
+
+  var myDat = { x , y, dragging };
+
+  $.ajax({
+	type: "PATCH",
+	url: url,
+	data: myDat
+  });
+
 }
 
 
 function clearMe(){
+  var curl = '/spaces/' + <%= @space.id %> + '/clear';
   context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
   clickX = [];
   clickY = [];
   clickDrag = [];
+
+  $.ajax({
+	type: "PATCH",
+	url: curl,
+  });
+
 } 
 
 function redraw(){
@@ -127,7 +133,6 @@ function redraw(){
      context.closePath();
      context.stroke();
   }
-  space.save;
 }
 
 function loaddraw(){
