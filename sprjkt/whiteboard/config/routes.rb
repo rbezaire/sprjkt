@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   patch '/spaces/:space_id' => 'spaces#update'
   patch '/spaces/:space_id/clear' => 'spaces#clear'
+  get '/spaces/:space_id/load' => 'spaces#load'
 
   root 'spaces#index'
 

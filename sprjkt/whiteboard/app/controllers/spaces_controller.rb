@@ -11,8 +11,17 @@ class SpacesController < ApplicationController
   # GET /spaces/1
   # GET /spaces/1.json
   def show
+	@space = Space.find(params[:id])
+
     @layer = @space.layers.all
 	@layer_new = Layer.new
+
+	@d1 = @space.clickX
+	@d2 = @space.clickY
+	@d3 = @space.clickDrag
+
+	return @d1, @d2, @d3
+
   end
 
   # GET /spaces/new
@@ -39,9 +48,29 @@ class SpacesController < ApplicationController
       end
     end
 
+  end
 
+  # GET /spaces/1
+  # GET /spaces/1.json
+  def load
+	@space = Space.find(params[:space_id])
+	@d1 = @space.clickX
+	@d2 = @space.clickY
+	@d3 = @space.clickDrag
+
+raise @d1.inspect
+
+	return @d1, @d2, @d3
+
+    respond_to do |format|
+        format.html { redirect_to @space, notice: 'Space was successfully loaded.' }
+        format.json { render :show, status: :ok, location: @space }
+    end
 
   end
+
+
+
 
   # GET /spaces/1
   # GET /spaces/1.json

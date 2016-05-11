@@ -1,167 +1,186 @@
 <!DOCTYPE html>
 <require 'json'>
 <html>
-<head>
-<style>
-.brdr {
-	border: 5px solid black;
-	width:400px;
-	height:400px;
-}
-</style>
-</head>
-<script>
-</script>
+	<head>
+		<style>
+			.brdr {
+				border: 5px solid black;
+				width:600px;
+				height:600px;
+			}
+		</style>
+	</head>
 
 <center>
 
-<p id="notice"><%= notice %></p>
+	<p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Space User:</strong>
-  <%= @space.user.username %>
-</p>
+	<p>
+	  <strong>Space Owner:</strong>
+	  <%= @space.user.username %>
+	</p>
 
-  <%= @post %>
+	<p> <strong>Spacename:</strong>
+	  <%= @space.spacename %>
+	</p>
 
-<p> <strong>Spacename:</strong>
-  <%= @space.spacename %>
-</p>
 
-<p>
-  <strong>Space Id:</strong>
-  <%= @space.id %>
-</p>
+	<div class="brdr"> 
+	<div id="canvasDiv"></div>
+	</div>
 
-<div class="brdr"> 
-<div id="canvasDiv"></div>
-</div>
+	<script>
 
-<script>
+		var surl = '/spaces/' + <%= @space.id %>;
+		$.ajax({
+			type: "GET",
+			url: surl
+		});
 
-var canvasWidth = 400;
-var canvasHeight = 400;
 
-var canvasDiv = document.getElementById('canvasDiv');
-canvas = document.createElement('canvas');
-canvas.setAttribute('width', canvasWidth);
-canvas.setAttribute('height', canvasHeight);
-canvas.setAttribute('id', 'canvas');
-canvasDiv.appendChild(canvas);
+		var canvasWidth = 600;
+		var canvasHeight = 600;
 
-if(typeof G_vmlCanvasManager != 'undefined') {
-	canvas = G_vmlCanvasManager.initElement(canvas);
-}
-context = canvas.getContext("2d");
+		var canvasDiv = document.getElementById('canvasDiv');
+		canvas = document.createElement('canvas');
+		canvas.setAttribute('width', canvasWidth);
+		canvas.setAttribute('height', canvasHeight);
+		canvas.setAttribute('id', 'canvas');
+		canvasDiv.appendChild(canvas);
 
-$('#canvas').mousedown(function(e){
-  var mouseX = e.pageX - this.offsetLeft;
-  var mouseY = e.pageY - this.offsetTop;
+		if(typeof G_vmlCanvasManager != 'undefined') {
+			canvas = G_vmlCanvasManager.initElement(canvas);
+		}
+		context = canvas.getContext("2d");
+
+		$('#canvas').mousedown(function(e){
+		  var mouseX = e.pageX - this.offsetLeft;
+		  var mouseY = e.pageY - this.offsetTop;
+				
+		  paint = true;
+		  addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, false);
+		  redraw();
+		});
+
+		$('#canvas').mousemove(function(e){
+		  if(paint){
+			addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+			redraw();
+		  }
+		});
+
+		$('#canvas').mouseup(function(e){
+		  paint = false;
+		  location.reload(true);
+		});
+
+		$('#canvas').mouseleave(function(e){
+		  paint = false;
+		  location.reload(true);
+		});
+
+		var clickX = new Array();
+		var clickY = new Array();
+		var clickDrag = new Array();
+		var paint;
+
+
+		function addClick(x, y, dragging)
+		{
+		  var url = '/spaces/' + <%= @space.id %>;
+		  clickX.push(x);
+		  clickY.push(y);
+		  clickDrag.push(dragging);
+
+		  var myDat = { x , y, dragging };
+
+		  $.ajax({
+			type: "PATCH",
+			url: url, data: myDat
+		  });
+
+		}
+
+
+		function clearMe(){
+		  var curl = '/spaces/' + <%= @space.id %> + '/clear';
+		  context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+		  clickX = [];
+		  clickY = [];
+		  clickDrag = [];
+
+		  $.ajax({
+			type: "PATCH",
+			url: curl,
+		  });
+
+
+		}
+
+		function redraw(){
+
+		  context.strokeStyle = "#df4b26";
+		  context.lineJoin = "round";
+		  context.lineWidth = 2;
+					
+		  for(var i=0; i < clickX.length; i++) {		
+			context.beginPath();
+			if(clickDrag[i] && i){
+			  context.moveTo(clickX[i-1], clickY[i-1]);
+			 }else{
+			   context.moveTo(clickX[i]-1, clickY[i]);
+			 }
+			 context.lineTo(clickX[i], clickY[i]);
+			 context.closePath();
+			 context.stroke();
+		  }
+		}
+
+		function loaddraw(){
+		  context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+		  var lurl = '/spaces/' + <%= @space.id %>;
+
+		  $.ajax({
+			type: "GET",
+			url: lurl,
+		  });
+
+		  var xdata = <%= raw @d1 %>;
+		  var ydata = <%= raw @d2 %>;
+		  var ddata = <%= raw @d3 %>;
+
+		  context.strokeStyle = "#df4b26";
+		  context.lineJoin = "round";
+		  context.lineWidth = 2;
 		
-  paint = true;
-  addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, false);
-  redraw();
-});
+			for(var i=0; i < xdata.length; i++) {		
+			context.beginPath();
+			if((ddata[i] == "true") && i){
+			  context.moveTo(xdata[i-1], ydata[i-1]);
+			 }else{
+			   context.moveTo(xdata[i]-1, ydata[i]);
+			 }
+			 context.lineTo(xdata[i], ydata[i]);
+			 context.closePath();
+			 context.stroke();	
+		     }
+		}
 
-$('#canvas').mousemove(function(e){
-  if(paint){
-    addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
-    redraw();
-  }
-});
+		var surl = '/spaces/' + <%= @space.id %>;
+		$.ajax({
+			type: "GET",
+			url: surl
+		});
+		
+	</script>
 
-$('#canvas').mouseup(function(e){
-  paint = false;
-});
-
-$('#canvas').mouseleave(function(e){
-  paint = false;
-});
-
-var clickX = new Array();
-var clickY = new Array();
-var clickDrag = new Array();
-var paint;
-var url = '/spaces/' + <%= @space.id %>;
-
-function addClick(x, y, dragging)
-{
-  clickX.push(x);
-  clickY.push(y);
-  clickDrag.push(dragging);
-
-  var myDat = { x , y, dragging };
-
-  $.ajax({
-	type: "PATCH",
-	url: url,
-	data: myDat
-  });
-
-}
+	<button onclick="clearMe()">Clear Me!</button>
+	<button onclick="loaddraw()">Load Me!</button>
 
 
-function clearMe(){
-  var curl = '/spaces/' + <%= @space.id %> + '/clear';
-  context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-  clickX = [];
-  clickY = [];
-  clickDrag = [];
+	<%= link_to 'Edit', edit_space_path(@space) %> |
+	<%= link_to 'Back', spaces_path %>
 
-  $.ajax({
-	type: "PATCH",
-	url: curl,
-  });
-
-} 
-
-function redraw(){
-  context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-  
-  context.strokeStyle = "#df4b26";
-  context.lineJoin = "round";
-  context.lineWidth = 2;
-			
-  for(var i=0; i < clickX.length; i++) {		
-    context.beginPath();
-    if(clickDrag[i] && i){
-      context.moveTo(clickX[i-1], clickY[i-1]);
-     }else{
-       context.moveTo(clickX[i]-1, clickY[i]);
-     }
-     context.lineTo(clickX[i], clickY[i]);
-     context.closePath();
-     context.stroke();
-  }
-}
-
-function loaddraw(){
-  context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-  
-  context.strokeStyle = "#df4b26";
-  context.lineJoin = "round";
-  context.lineWidth = 2;
-			
-  for(var i=0; i < space.clickX.length; i++) {		
-    context.beginPath();
-    if(space.clickDrag[i] && i){
-      context.moveTo(space.clickX[i-1], space.clickY[i-1]);
-     }else{
-       context.moveTo(space.clickX[i]-1, space.clickY[i]);
-     }
-     context.lineTo(space.clickX[i], space.clickY[i]);
-     context.closePath();
-     context.stroke();
-  }
-}
-</script>
-
-<button onclick="clearMe()">Clear Me!</button>
-<button onclick="loaddraw()">Load Me!</button>
-
-
-<%= link_to 'Edit', edit_space_path(@space) %> |
-<%= link_to 'Back', spaces_path %>
 
 </center>
 
