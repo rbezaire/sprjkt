@@ -40,7 +40,7 @@ class SpacesController < ApplicationController
 
     respond_to do |format|
       if @space.update(space_params)
-        format.html { redirect_to @space, notice: 'Space was successfully updated.' }
+        format.html { redirect_to @space }
         format.json { render :show, status: :ok, location: @space }
       else
         format.html { render :edit }
@@ -58,7 +58,7 @@ class SpacesController < ApplicationController
 	@d2 = @space.clickY
 	@d3 = @space.clickDrag
 
-raise @d1.inspect
+	raise @d1.inspect
 
 	return @d1, @d2, @d3
 
@@ -86,7 +86,7 @@ raise @d1.inspect
 
     respond_to do |format|
       if @space.save
-        format.html { redirect_to @space, notice: 'Space was successfully created.' }
+        format.html { redirect_to @space }
         format.json { render :show, status: :created, location: @space }
       else
         format.html { render :new }
@@ -111,7 +111,7 @@ raise @d1.inspect
 
     respond_to do |format|
       if @space.update(space_params)
-        format.html { redirect_to @space, notice: 'Space was successfully updated.' }
+        format.html { redirect_to @space }
         format.json { render :show, status: :ok, location: @space }
       else
         format.html { render :edit }
